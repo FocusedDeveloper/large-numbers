@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1452882335 source:c:\users\d1\documents\codeblocks\addlargenumbers\main.cpp
+	<iostream>
+
+1453227470 source:f:\codeblocks\addlargenumbers\main.cpp
+	<iostream>
+	"AddLargeNumbers.h"
+
+1453224374 f:\codeblocks\addlargenumbers\addlargenumbers.h
+
