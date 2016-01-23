@@ -1,3 +1,12 @@
+//*****************************************************
+//  Charles Darnell Johnson
+//  01/23/2016
+//  Adding Large Numbers
+//  This program adds large integers (positive or negative)
+//  that would normally be out of range.
+//
+//*****************************************************
+#include <limits>
 #include <iostream>
 #include "AddLargeNumbers.h"
 
@@ -7,95 +16,97 @@ using namespace std;
 
 int main()
 {
-    // making these strings static fixes the crash
-    // and it crashes upon exit.
-    // also crashes on the 2nd pass through when setting the string.
-    static string numString1;
-    static string numString2;
+    int option;
 
-    Adden number1;
-    Adden number2;
-    Adden mySum;
+    cout << "*** Adding Large Numbers ***"<< endl << endl;
+    do
+    {
+        cout << "Select an option:" << endl
+             << "  1) Add two numbers" << endl
+             << "  2) Add a list of numbers " << endl
+             << "  3) Exit" << endl;
+        cin >> option;
 
-    number1.num = new int[MAX_SIZE];
-    number2.num = new int[MAX_SIZE];
-    mySum.num = new int[MAX_SIZE+1];
-
-    int num1[MAX_SIZE];
-    int num2[MAX_SIZE];
-    int sum[MAX_SIZE+1];
-
-    bool overFlow;
-    bool bigger;
-
-    Operation myOp;
-
-    do{
-
-        // recursive loop now fully functional
-        //recursiveLoop();
-        numString1 = getNumberString();
-        numString2 = getNumberString();
-
-        //stringToIntArray(numString1, num1);
-        //stringToIntArray(numString2, num2);
-        number1.sign = stringToIntArray(numString1,number1.num);
-        number2.sign = stringToIntArray(numString2,number2.num);
-        //initSum(mySum.num);
-
-        myOp = getOperation(number1,number2,mySum.sign);
-
-        //displaySum(number1.num,false);
-
-       // displaySum(number2.num,false);
-//        bigger = isGreater(number1.num,number2.num);
-//        if(bigger)
-//            cout<<"First number is greater."<<endl;
-//        else
-//            cout<<"2nd number is greater."<<endl;
-
-//        if(number1.sign == positive)
-//            cout<<"Number1 is positive"<<endl;
-//        else
-//            cout<<"Number1 is negative"<<endl;
-//        if(number2.sign == positive)
-//            cout<<"Number2 is positive"<<endl;
-//        else
-//            cout<<"Number2 is negative"<<endl;
-
-
-        if(myOp == add)
-        {
-//            cout<<"about to add numbers"<<endl;
-            addNumbers(number1.num, number2.num, mySum.num);
+        if (!cin){
+            cin.clear();
         }
-        else if(myOp = subtract)
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << endl;
+
+        switch (option)
         {
-//            cout<<"OP is subtraction"<<endl;
-            subNumbers(number1.num, number2.num, mySum.num);
+        case 1:
+            iterativeLoop();
+            break;
+        case 2:
+            recursiveLoop();
+            break;
+        case 3:
+            cout << "Exiting." << endl;
+            break;
+        default:
+            cout << "Invalid option entered" << endl;
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
 
-        //else
-            //subNumbers(number1.num, number2.num, mySum.num);
-
-        overFlow = isOverflow(mySum.num);
-        displaySum(mySum.num,overFlow, mySum.sign);
-
-        //addNumbers(num1, num2, sum);
-        //overFlow = isOverflow(sum);
-        //displaySum(sum,overFlow);
-
-    }while(toContinue());
+    } while (option != 3);
 
     return 0;
 }
 
+// Adds two numbers together
+void iterativeLoop()
+{
+    // When this code was in the main function these strings would cause
+    // The program to crash upon exit, or on the 2nd loop through when
+    // trying to set numString2 for a 2nd time.
+    string numString1;                          // Strings hold the integers input from the user
+    string numString2;
+
+    Addend number1;                             // Addend contains integers and their sign
+    Addend number2;
+    Addend mySum;                               // Contains the sum of the addends
+
+    number1.num = new int[MAX_SIZE];            // Integer array to store large numbers
+    number2.num = new int[MAX_SIZE];
+    mySum.num = new int[MAX_SIZE+1];            // Sum size+1 to store the carry digit
+
+    bool overFlow;                              // tracks whether sum overflows
+
+    Operation myOp;                             // tracks what operation (add or subtract) to be performed
+
+
+        numString1 = getNumberString();                             // get strings from user
+        numString2 = getNumberString();
+
+        number1.sign = stringToIntArray(numString1,number1.num);    // turns strings to int arrays
+        number2.sign = stringToIntArray(numString2,number2.num);    // and sets the sign of the integer via return value
+
+        myOp = getOperation(number1,number2,mySum.sign);            // gets the operation to be performed
+                                                                    // and returns the sign of their sum
+        if(myOp == add)
+        {
+            addNumbers(number1.num, number2.num, mySum.num);        // calculate the sum via adding
+        }
+        else if(myOp == subtract)
+        {
+            subNumbers(number1.num, number2.num, mySum.num);        // calculate the sum via subtracting
+        }
+        overFlow = isOverflow(mySum.num);                           // Check if sum overflowed
+        displaySum(mySum.num,overFlow, mySum.sign);                 // Displays sum to screen
+
+}
+
+// Prompts user for number string
+// PRE: Calling function ready to store string
+// POST: Returns valid string depending on MAX_SIZE
 string getNumberString()
 {
     string numString;
     bool isValid;
     do{
-        cout<<"Please enter a positive number with no more than "<<MAX_SIZE<<" digits: "<<endl;
+        cout<<"Please enter a number (positive or negative), with no more than "<<MAX_SIZE<<" digits: "<<endl;
         cin>>numString;
         isValid = isNumStringValid(numString);
     }while(!isValid);
@@ -105,7 +116,8 @@ string getNumberString()
 bool isNumStringValid(string numString)
 {
     int isValid = 0;
-    int myMax = MAX_SIZE;
+    // made myMax unsigned to simply get rid of the warnings
+    unsigned int myMax = MAX_SIZE;
     char firstChar = numString[0];
 
     if(firstChar == '-')
@@ -122,7 +134,8 @@ bool isNumStringValid(string numString)
                 isValid = 2;
         if(isValid == 0)
         {
-            for(int i = 1; i < numString.length(); i++)
+            // made i unsigned to simply get rid of the warnings
+            for(unsigned int i = 1; i < numString.length(); i++)
             {
                 if(numString[i] < '0' || numString[i] > '9')
                 {
@@ -214,13 +227,18 @@ void displaySum(int num[], bool overFlow, Sign sign)
     {
         mostSigDig = mostSigDig + num[i];
         if(mostSigDig)
+        {
             cout<<num[i];
+            if(i%3==0 && i > 0)
+                cout<<',';
+        }
     }
     if(mostSigDig == 0)
         cout<<'0';
     cout<<endl;
     if(overFlow)
-        cout<<"The sum of the numbers is out of range!!"<<endl<<endl;
+        cout<<"The sum of the numbers is out of range!!"<<endl;
+    cout<<endl;
 }
 
 bool toContinue()
@@ -237,76 +255,94 @@ bool toContinue()
 
 void recursiveLoop()
 {
-    int numAddens;
-    int** addensArray;
-    int sum[MAX_SIZE+1];
-    bool overflow;
+    int numAddends;
+    Addend* addendsArray;
+    Addend sum;
+
+    sum.num = new int[MAX_SIZE+1];
+    sum.sign = positive;
     int counter = 0;
     int carry = 0;
-    Sign sign;
 
-    numAddens = howManyAddens();
+    numAddends = howManyAddends();
 
-    addensArray = new int*[numAddens];
-    getAddens(numAddens, addensArray);
+    addendsArray = new Addend[numAddends];
+    getAddends(numAddends, addendsArray);
     initSum(sum);
-    recursiveAdd(addensArray, sum, numAddens,carry, counter);
-    overflow = isOverflow(sum);
-    displaySum(sum,overflow, sign);
+    if(sum.sign == positive)
+        cout<<"initial sum sign is positive"<<endl;
+    if(sum.sign == negative)
+        cout<<"initial sum sign is negative"<<endl;
+    recursiveAdd(addendsArray, sum, numAddends,carry, counter);
+
+    delete addendsArray;
+    delete sum.num;
 
 }
 
-int howManyAddens()
+int howManyAddends()
 {
-    int addens;
+    int addends;
     cout<<"How many numbers would you like to add together? ";
-    cin>>addens;
-    if(addens < 2)
-        addens = 2;
-    else if(addens > MAX_ADDENS)
-        addens = MAX_ADDENS;
-    return addens;
+    cin>>addends;
+    if(addends < 2)
+        addends = 2;
+    else if(addends > MAX_ADDENDS)
+        addends = MAX_ADDENDS;
+    return addends;
 }
 
-void getAddens(int numAddens, int** addens)
+void getAddends(int numAddends, Addend addends[])
 {
     string numString;
-    for(int i = 0; i < numAddens; i++)
+    for(int i = 0; i < numAddends; i++)
     {
-        addens[i] = new int[MAX_SIZE];
+        addends[i].num = new int[MAX_SIZE];
         numString = getNumberString();
-        stringToIntArray(numString,addens[i]);
+        addends[i].sign = stringToIntArray(numString,addends[i].num);
     }
 }
 
-// was functional before adding subtraction.
-void recursiveAdd(int** addensArray,int sum[], int numAddens, int& carry, int& counter)
+
+void recursiveAdd(Addend* addendsArray, Addend sum, int numAddends, int& carry, int& counter)
 {
 
     bool overflow = false;
     Operation myOp;
 
-    if(carry != 0 || counter == numAddens)
+    if(carry != 0 || counter == numAddends)
+    {
+        overflow = isOverflow(sum.num);
+        displaySum(sum.num,overflow, sum.sign);
         return;
+    }
     else
     {
-        //myOp = getOperation(addensArray[counter],sum,sum.sign)
-        addNumbers(addensArray[counter],sum,sum);
+        myOp = getOperation(addendsArray[counter] ,sum ,sum.sign);
+
+        if(myOp == add)
+        {
+            addNumbers(addendsArray[counter].num ,sum.num ,sum.num);
+        }
+        else if(myOp == subtract)
+        {
+            subNumbers(addendsArray[counter].num ,sum.num ,sum.num);
+        }
         counter++;
-        overflow = isOverflow(sum);
-        carry = sum[MAX_SIZE+1];
-        recursiveAdd(addensArray, sum, numAddens, carry, counter);
+        carry = sum.num[MAX_SIZE+1];
+        recursiveAdd(addendsArray, sum, numAddends, carry, counter);
     }
 }
 
-void initSum(int sum[])
+void initSum(Addend sum)
 {
+    sum.sign = positive;
     for(int i = 0; i < MAX_SIZE+1; i++)
-        sum[i] = 0;
+        sum.num[i] = 0;
 }
 
 
-Operation getOperation(Adden num1,Adden num2,Sign& sumSign)
+Operation getOperation(Addend num1,Addend num2,Sign& sumSign)
 {
     int numNegatives = 0;
     Operation myOp;
@@ -397,7 +433,6 @@ void complementIntArray(int num1[], int num2[])
 void dropMostSigDig(int num[])
 {
     int mostSigDig = 0;
-    bool found = false;
 
     int i = MAX_SIZE-1;
     while(!mostSigDig && i >= 0)
