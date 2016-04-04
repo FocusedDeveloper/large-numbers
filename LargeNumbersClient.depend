@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1458265550 source:e:\codeblocks\largenumbersclient\largenum.cpp
+	"LargeNum.h"
+	<iostream>
+	<string>
+	<sstream>
+	<stdexcept>
+	"invalidValue.h"
+
+1458244220 e:\codeblocks\largenumbersclient\largenum.h
+	<string>
+	<iostream>
+
+1458262388 e:\codeblocks\largenumbersclient\invalidvalue.h
+	<sstream>
+	<string>
+
+1458257696 source:e:\codeblocks\largenumbersclient\main.cpp
+	<iostream>
+	<limits>
+	<string>
+	"LargeNum.h"
+
+1459172306 source:f:\codeblocks\largenumbersclient\largenum.cpp
+	"LargeNum.h"
+	<iostream>
+	<string>
+	<sstream>
+	<stdexcept>
+	"invalidValue.h"
+
+1459172306 f:\codeblocks\largenumbersclient\largenum.h
+	<string>
+	<iostream>
+
+1458265988 f:\codeblocks\largenumbersclient\invalidvalue.h
+	<sstream>
+	<string>
+
+1459172430 source:f:\codeblocks\largenumbersclient\main.cpp
+	<iostream>
+	<limits>
+	<string>
+	"LargeNum.h"
+
