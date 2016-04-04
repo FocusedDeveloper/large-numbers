@@ -43,3 +43,19 @@
 	<string>
 	"LargeNum.h"
 
+1459773898 source:c:\users\d1\desktop\large-numbers\largenum.cpp
+	"LargeNum.h"
+	<iostream>
+	<string>
+	<sstream>
+	<stdexcept>
+	"invalidValue.h"
+
+1459773929 c:\users\d1\desktop\large-numbers\largenum.h
+	<string>
+	<iostream>
+
+1459773958 c:\users\d1\desktop\large-numbers\invalidvalue.h
+	<sstream>
+	<string>
+
